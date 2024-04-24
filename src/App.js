@@ -1,23 +1,49 @@
 import logo from './logo.svg';
 import './App.css';
+import Navbar from './Components/Navbar';
 
+import Cards from './Components/Cards';
+import Filter from './Components/Filter';
+import { apiUrl,filterData } from './data';
+import { useEffect, useState } from 'react';
+
+import Snipper from './Components/Snipper';
+import {toast} from "react-toastify";
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+const [Course,setCourse]=useState(null);
+const [loading,setLoading]=useState(true);
+async function fetchdata(){
+setLoading(true);
+try{
+let response =await fetch(apiUrl);
+let output=await response.json();
+setCourse(output.data);
+
+//output
+}
+catch(error){
+toast.error("please god help me");
+}
+setLoading(false);
+
+}
+useEffect(()=>{
+
+  fetchdata();
+},[])
+return (
+    <div >
+      <div>
+    <Navbar></Navbar>
+    </div>
+    <div>
+      <Filter filterData={filterData}></Filter>
+    </div>
+    <div>
+      {
+        loading?(<Snipper></Snipper>):(<Cards Course={Course}></Cards>)
+      }
+    </div>
     </div>
   );
 }
